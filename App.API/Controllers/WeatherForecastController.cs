@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using App.API.Data;
 using App.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace App.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
