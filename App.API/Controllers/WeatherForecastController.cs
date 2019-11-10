@@ -12,8 +12,8 @@ using Microsoft.Extensions.Logging;
 namespace App.API.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class WeatherForecastController : ControllerBase
     {
         private readonly DataContext _context;
