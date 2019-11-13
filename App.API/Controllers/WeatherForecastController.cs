@@ -34,6 +34,7 @@ namespace App.API.Controllers
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
+            throw new Exception("Hello Exception");
             var rng = new Random();
             Value[] values = await _context.Values.ToArrayAsync();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
