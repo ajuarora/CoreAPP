@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using App.API.Helpers;
-
+using AutoMapper;
 
 namespace App.API
 {
@@ -36,9 +36,13 @@ namespace App.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(
+                options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddCors();
+            services.AddAutoMapper(typeof(AppRepository).Assembly);
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAppRepository, AppRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -63,12 +67,15 @@ namespace App.API
             else
             {
                 app.UseExceptionHandler(
-                    builder=>{
+                    builder =>
+                    {
                         builder.Run(
-                            async context =>{
-                                context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                            async context =>
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                                 var error = context.Features.Get<IExceptionHandlerFeature>();
-                                if (error!=null){
+                                if (error != null)
+                                {
                                     context.Response.AddApplicationError(error.Error.Message);
                                     await context.Response.WriteAsync(error.Error.Message);
                                 }
